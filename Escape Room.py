@@ -58,6 +58,14 @@ def draw_wall_one():
     pygame.draw.rect(screen, BLUE, [740, 540, 60, 60])
     pygame.draw.rect(screen, BLUE, [660, 540, 60, 60])
 
+def display_messege():
+    pygame.draw.rect(screen, WHITE, [200, 200, 400, 200])
+    pygame.draw.rect(screen, RED, [580, 200, 20, 20])
+    
+messege_box = False
+chest_clicked = False
+keypad_clicked = False
+
 # Game Loop
 done = False
 
@@ -68,21 +76,31 @@ while not done:
     keypad = pygame.Rect(500, 280, 40, 40)
     right = pygame.Rect(740, 540, 60, 60)
     left = pygame.Rect(660, 540, 60, 60)
+    messege_x = pygame.Rect(580, 200, 20, 20)
     
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             done = True
         if event.type == pygame.MOUSEBUTTONDOWN:
-            location = pygame.mouse.get_pos()
-            if right.collidepoint(location):
-                print("right")
-            elif left.collidepoint(location):
-                print("left")
-            elif chest.collidepoint(location):
-                print("chest")
-                #display_message()
-            elif keypad.collidepoint(location):
-                print("keypad")
+            while not messege_box:
+                location = pygame.mouse.get_pos()
+                if right.collidepoint(location):
+                    print("right")
+                elif left.collidepoint(location):
+                    print("left")
+                else:
+                    if chest.collidepoint(location):
+                        print("chest")
+                        #chest_clicked = True
+                        messege_box = True
+                    if keypad.collidepoint(location):
+                        print("keypad")
+                        #keypad_clicked = True
+                        messege_box = True
+            if messege_box:
+                box_loc = pygame.mouse.get_pos()
+                if messege_x.collidepoint(box_loc):
+                    messege_box = False
 
 
     # Game logic (Check for collisions, update points, etc.)
@@ -93,7 +111,8 @@ while not done:
     screen.fill(SILVER)
     pygame.draw.rect(screen, BLACK, [0, 500, 800, 100])
     draw_wall_one()
-    
+    if messege_box:
+        display_messege()
     # Update screen (Actually draw the picture in the window.)
     pygame.display.flip()
 
